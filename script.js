@@ -1,3 +1,23 @@
+// --- INDEXED DB FOR IMAGE STORAGE ---
+let db;
+
+const request = indexedDB.open("LovePageDB", 1);
+
+request.onupgradeneeded = function (event) {
+    db = event.target.result;
+    db.createObjectStore("images");
+};
+
+request.onsuccess = function (event) {
+    db = event.target.result;
+    loadImages();
+};
+
+request.onerror = function () {
+    console.error("IndexedDB failed");
+};
+
+
 // --- GLOBAL VARIABLES ---
 
 let countdownInterval;
@@ -271,36 +291,20 @@ function triggerUpload(circle) {
 
 
 function handleImageUpload(event, circle) {
-
     const file = event.target.files[0];
+    if (!file) return;
 
-    if (file) {
+    const tx = db.transaction("images", "readwrite");
+    const store = tx.objectStore("images");
 
-        const reader = new FileReader();
+    store.put(file, circle);
 
-        reader.onload = function () {
-
-            const imageData = reader.result;
-
-            try {
-
-                localStorage.setItem(circle, imageData);
-
-                displayImage(circle, imageData);
-
-            } catch (error) {
-
-                console.error('Error saving image:', error);
-
-            }
-
-        };
-
-        reader.readAsDataURL(file);
-
-    }
-
+    tx.oncomplete = () => {
+        const imgURL = URL.createObjectURL(file);
+        displayImage(circle, imgURL);
+    };
 }
+
 
 
 
@@ -349,32 +353,28 @@ function displayImage(circle, imageData) {
 
 
 function loadImages() {
+    if (!db) return;
+
+    const tx = db.transaction("images", "readonly");
+    const store = tx.objectStore("images");
 
     const circles = [
-
-        'aamir', 'place', 'bsmla', 
-
-        'left-window', 'right-window', 
-
-        'left-hug', 'right-hug', 'centre-hug'
-
+        'aamir','place','bsmla',
+        'left-window','right-window',
+        'left-hug','centre-hug','right-hug'
     ];
 
-    
-
     circles.forEach(circle => {
-
-        const savedImage = localStorage.getItem(circle);
-
-        if (savedImage) {
-
-            displayImage(circle, savedImage);
-
-        }
-
+        const req = store.get(circle);
+        req.onsuccess = () => {
+            if (req.result) {
+                const imgURL = URL.createObjectURL(req.result);
+                displayImage(circle, imgURL);
+            }
+        };
     });
-
 }
+
 
 
 
