@@ -1,173 +1,172 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You, Bsmla 🌸✨</title>
 
-    <title>For You, Bsmla</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Outfit:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="styles.css">
-
 </head>
 
 <body>
+    <div class="background-overlay"></div>
 
-    <div class="container">
+    <main class="container">
+        <!-- Hero Section -->
+        <header class="hero">
+            <h1>Across the Ocean, Under the Same Moon, <span class="highlight">Bsmla</span> 🌸✨</h1>
+            <p class="subtitle">Though miles apart, we’re always connected by the same moon, with every wave of the
+                ocean bringing our hearts and friendship closer.</p>
+        </header>
 
-        <h1>Across the Ocean, Under the Same Moon, <span>Bsmla</span> 🌸✨</h1>
+        <!-- Glassmorphism Card Wrapper -->
+        <div class="glass-panel">
 
-        <p>Though miles apart, we’re always connected by the same moon, with every wave of the ocean bringing our hearts and friendship closer.</p>
-
-        
-
-        <div class="countdown-timer">
-
-            <h2>Countdown to Our Special Day:</h2>
-
-            <div class="countdown">
-
-                <div class="countdown-item"><span id="days">00</span><label>Days</label></div>
-
-                <div class="countdown-item"><span id="hours">00</span><label>Hours</label></div>
-
-                <div class="countdown-item"><span id="minutes">00</span><label>Minutes</label></div>
-
-                <div class="countdown-item"><span id="seconds">00</span><label>Seconds</label></div>
-
-            </div>
-
-            <p class="countdown-date" id="edit-countdown-trigger">
-
-                <span id="special-day-name">Special Day</span> - <span id="countdown-date">December 31, 2024</span>
-
-            </p>
-
-
-
-            <div id="edit-date-section" style="display: none;">
-
-                <input type="text" id="new-special-day-name" placeholder="Special Day Name">
-
-                <input type="date" id="new-countdown-date">
-
-                <button id="save-countdown-btn">Save</button>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="photo-section">
-
-            <div class="photo-circle" data-circle="aamir">
-
-                <img src="default-aamir.jpg" alt="Aamir's photo">
-
-                <span>Aamir's photo</span>
-
-            </div>
-
-
-
-            <div class="emoji-wrapper">
-
-                <div class="emoji-left">🧸🌚🤍</div>
-
-                <div class="upload-circle" data-circle="place">
-
-                    <img src="default-place.jpg" alt="Place photo">
-
-                    <span>Upload a picture of the place where you want to meet</span>
-
+            <!-- Countdown Timer -->
+            <section class="countdown-section">
+                <h2>✨ Countdown to Our Special Day ✨</h2>
+                <div class="countdown-grid">
+                    <div class="time-item">
+                        <div class="time-value" id="days">00</div>
+                        <div class="time-label">Days</div>
+                    </div>
+                    <div class="time-item">
+                        <div class="time-value" id="hours">00</div>
+                        <div class="time-label">Hours</div>
+                    </div>
+                    <div class="time-item">
+                        <div class="time-value" id="minutes">00</div>
+                        <div class="time-label">Minutes</div>
+                    </div>
+                    <div class="time-item">
+                        <div class="time-value" id="seconds">00</div>
+                        <div class="time-label">Seconds</div>
+                    </div>
                 </div>
 
-                <div class="emoji-right">🖤🌝🕊️</div>
+                <div class="date-display" onclick="editCountdownDate()">
+                    <span id="special-day-name">Special Day</span> — <span id="countdown-date">December 31, 2024</span>
+                    <span class="edit-icon">✎</span>
+                </div>
 
+                <!-- Editable Date Section (Hidden by default) -->
+                <div id="edit-date-section" class="edit-panel hidden">
+                    <div class="input-group">
+                        <input type="text" id="new-special-day-name" placeholder="Name of the day">
+                        <input type="date" id="new-countdown-date">
+                    </div>
+                    <button class="btn-primary" onclick="saveCountdownDate()">Save Date</button>
+                    <button class="btn-secondary"
+                        onclick="document.getElementById('edit-date-section').classList.add('hidden')">Cancel</button>
+                </div>
+            </section>
+
+            <!-- Photo Upload Section -->
+            <section class="photo-gallery">
+                <div class="photo-card" onclick="triggerUpload('aamir')">
+                    <div class="image-wrapper">
+                        <img id="img-aamir" src="left-image.png"
+                            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNmMmYyZjIiLz48dGV4dCB4PSI1MCIgeT0iNTAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5Ij5BPC90ZXh0Pjwvc3ZnPg=='"
+                            alt="Aamir">
+                        <div class="overlay">
+                            <span>Upload Aamir's Photo</span>
+                        </div>
+                    </div>
+                    <p>Aamir</p>
+                </div>
+
+                <div class="center-piece">
+                    <div class="emoji-float left">🧸🌚🤍</div>
+                    <div class="photo-card place-card" onclick="triggerUpload('place')">
+                        <div class="image-wrapper">
+                            <img id="img-place" src="default-place.jpg"
+                                onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNmMmYyZjIiLz48dGV4dCB4PSI1MCIgeT0iNTAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5Ij5QbGFjZTwvdGV4dD48L3N2Zz4='"
+                                alt="Our Dream Place">
+                            <div class="overlay">
+                                <span>Upload Dream Place</span>
+                            </div>
+                        </div>
+                        <p>Our Dream Place</p>
+                    </div>
+                    <div class="emoji-float right">🖤🌝🕊️</div>
+                </div>
+
+                <div class="photo-card" onclick="triggerUpload('bsmla')">
+                    <div class="image-wrapper">
+                        <img id="img-bsmla" src="right-image.png"
+                            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNmMmYyZjIiLz48dGV4dCB4PSI1MCIgeT0iNTAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5Ij5CPC90ZXh0Pjwvc3ZnPg=='"
+                            alt="Bsmla">
+                        <div class="overlay">
+                            <span>Upload Bsmla's Photo</span>
+                        </div>
+                    </div>
+                    <p>Bsmla</p>
+                </div>
+            </section>
+
+            <!-- Interactive Text Section -->
+            <section class="love-notes">
+                <div class="butterfly-container" id="butterfly">
+                    <div class="butterfly">🦋</div>
+                </div>
+                <div class="text-display">
+                    <p id="love-text">Tap the butterfly for a message...</p>
+                </div>
+            </section>
+
+            <!-- Virtual Hug Section -->
+            <section class="virtual-hug-section">
+                <div class="hug-stage">
+                    <img src="left-image.png" id="left-image" class="avatar left" alt="Me">
+                    <img src="centre-image.png" id="centre-image" class="avatar center hidden" alt="Hug">
+                    <img src="right-image.png" id="right-image" class="avatar right" alt="You">
+                </div>
+                <button id="hug-btn" class="btn-action pulse">Send a Virtual Hug 🤗</button>
+            </section>
+
+        </div> <!-- End Glass Panel -->
+
+        <!-- Side Decorations (Windows) -->
+        <div class="side-window left-window-container">
+            <img src="left-window.jpg" alt="Left View" class="window-img" id="left-window"
+                onclick="changeImage('left')">
+        </div>
+        <div class="side-window right-window-container">
+            <img src="right-window.jpg" alt="Right View" class="window-img" id="right-window"
+                onclick="changeImage('right')">
+        </div>
+
+        <div class="controls">
+            <button id="reset-btn" class="btn-text">Reset Experience</button>
+        </div>
+
+        <footer>
+            <p>Every moment with you is a treasure. 💖</p>
+        </footer>
+
+        <!-- Music Player Widget -->
+        <div class="music-player">
+            <div class="music-info">
+                <span class="music-title">Our Song 🎵</span>
+                <span class="music-status">Paused</span>
             </div>
-
-
-
-            <div class="photo-circle" data-circle="bsmla">
-
-                <img src="default-bsmla.jpg" alt="Bsmla's photo">
-
-                <span>Bsmla's photo</span>
-
-            </div>
-
+            <button id="play-pause-btn" class="play-btn">▶</button>
+            <audio id="bg-music" loop>
+                <!-- User should add their song here -->
+                <source src="our-song.mp3" type="audio/mpeg">
+            </audio>
         </div>
-
-
-
-        <div class="butterfly" id="butterfly">🦋</div>
-
-        <div class="text-container">
-
-            <p id="love-text"></p>
-
-        </div>
-
-
-
-        <div class="image-container">
-
-            <img src="left-window.jpg" alt="Left Window" class="window" id="left-window" 
-
-                 data-circle="left-window">
-
-            
-
-            <img src="right-window.jpg" alt="Right Window" class="window" id="right-window" 
-
-                 data-circle="right-window">
-
-        </div>
-
-        
-
-        
-
-        <div class="hug-container">
-
-            <button id="hug-btn" class="hug-btn">Send a Virtual Hug</button>
-
-            <div class="hug-images">
-
-                <img src="left-image.png" id="left-image" class="hug-image" alt="Left Image" 
-
-                     data-circle="left-hug">
-
-                <img src="centre-image.png" id="centre-image" class="hug-image" alt="Centre Image"
-
-                     data-circle="centre-hug">
-
-                <img src="right-image.png" id="right-image" class="hug-image" alt="Right Image" 
-
-                     data-circle="right-hug">
-
-            </div>
-
-        </div>
-
-
-
-        <footer>Every moment with you is a treasure. 💖</footer>
-
-
-<!-- Firebase (compat version for existing JS projects) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    </main>
 
     <script src="script.js"></script>
-
 </body>
 
 </html>
-
-
-

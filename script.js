@@ -1,616 +1,371 @@
-// ================= FIREBASE INIT (bsmla07) =================
+// Romantic Features: Floating Hearts & Typewriter
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBwYOSxzcsunbsA7_EeJCR73IlQPqFzZmc",
-  authDomain: "bsmla07.firebaseapp.com",
-  projectId: "bsmla07",
-  storageBucket: "bsmla07.firebasestorage.app",
-  messagingSenderId: "578331045340",
-  appId: "1:578331045340:web:3ae5c2919fc3a7c9367319"
-};
+function createFloatingHearts() {
+    const container = document.createElement('div');
+    container.classList.add('hearts-container');
+    document.body.appendChild(container);
 
-firebase.initializeApp(firebaseConfig);
+    const hearts = ['❤️', '💖', '🌸', '✨', '🦋', '🥰', '🌹'];
 
-// Firestore references (DO NOT rename)
-const firestoreDB = firebase.firestore();
-const stateRef = firestoreDB.collection("state").doc("main");
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
 
-// ==========================================================
+        // Randomize
+        const left = Math.random() * 100;
+        const duration = Math.random() * 3 + 4; // 4s to 7s
+        const size = Math.random() * 20 + 10; // 10px to 30px
 
+        heart.style.left = `${left}%`;
+        heart.style.fontSize = `${size}px`;
+        heart.style.animationDuration = `${duration}s`;
 
+        container.appendChild(heart);
 
-// --- INDEXED DB FOR IMAGE STORAGE ---
-let db;
+        // Cleanup
+        setTimeout(() => {
+            heart.remove();
+        }, duration * 1000);
+    }, 500);
+}
 
-const request = indexedDB.open("LovePageDB", 1);
+function startTypewriter() {
+    const titleElement = document.querySelector('h1');
+    const fullText = "Across the Ocean, Under the Same Moon, ";
+    // Check if highlight span exists or if we need to reconstruct
+    // The original HTML structure has a span inside. We'll type the text then fade in the name.
 
-request.onupgradeneeded = function (event) {
-    db = event.target.result;
-    db.createObjectStore("images");
-};
+    // Reset content
+    const nameSpan = '<span class="highlight">Bsmla</span> 🌸✨';
+    titleElement.innerHTML = '<span id="typing-text"></span><span class="typewriter-cursor"></span>';
 
-request.onsuccess = function (event) {
-    db = event.target.result;
-    loadImages();
-};
+    const typingSpan = document.getElementById('typing-text');
+    let i = 0;
 
-request.onerror = function () {
-    console.error("IndexedDB failed");
-};
-
-
-// --- GLOBAL VARIABLES ---
-
-let countdownInterval;
-
-let isKissAnimationRunning = false;
-
-let currentSentenceIndex = 0;
-
-const butterfly = document.getElementById('butterfly');
-
-const loveText = document.getElementById('love-text');
-
-
-
-// --- VIRTUAL HUG ---
-
-function triggerHugAnimation() {
-
-    const leftImage = document.getElementById('left-image');
-
-    const rightImage = document.getElementById('right-image');
-
-    const centreImage = document.getElementById('centre-image');
-
-
-
-    // Check screen width, don't run animation on small screens
-
-    if (window.innerWidth <= 480) {
-
-        return;
-
+    function type() {
+        if (i < fullText.length) {
+            typingSpan.textContent += fullText.charAt(i);
+            i++;
+            setTimeout(type, 80);
+        } else {
+            // Typing done, remove cursor and append name
+            document.querySelector('.typewriter-cursor').remove();
+            titleElement.innerHTML += nameSpan;
+            // Add a small bounce animation to the name
+            const highlight = titleElement.querySelector('.highlight');
+            highlight.style.opacity = '0';
+            highlight.style.transition = 'opacity 1s, transform 0.5s';
+            setTimeout(() => {
+                highlight.style.opacity = '1';
+                highlight.style.transform = 'scale(1.1)';
+                setTimeout(() => highlight.style.transform = 'scale(1)', 300);
+            }, 100);
+        }
     }
 
+    type();
+}
 
+document.getElementById('hug-btn').addEventListener('click', function () {
+    const leftImage = document.getElementById('left-image');
+    const rightImage = document.getElementById('right-image');
+    const centreImage = document.getElementById('centre-image');
+    const btn = document.getElementById('hug-btn');
 
-    // UPDATED: Animate based on percentage, not fixed pixels
+    // Disable button to prevent spamming
+    btn.disabled = true;
+    btn.textContent = "Sending love... ❤️";
 
-    leftImage.style.transform = 'translateX(100%) scale(0.8)';
-
-    rightImage.style.transform = 'translateX(-100%) scale(0.8)';
-
+    // 1. Move images towards center
+    leftImage.style.left = '40%';
     leftImage.style.opacity = '0';
 
+    rightImage.style.right = '40%';
     rightImage.style.opacity = '0';
 
-    
+    // 2. Show center image (hug)
+    setTimeout(() => {
+        leftImage.classList.add('hidden');
+        rightImage.classList.add('hidden');
 
-    centreImage.style.opacity = '1'; // Show center
+        centreImage.classList.remove('hidden');
+        centreImage.style.opacity = '1';
+        centreImage.style.transform = 'scale(1.2) rotate(10deg)'; // Little pop effect
+    }, 800);
 
-    centreImage.style.transform = 'translateX(-50%) scale(1)';
-
-
-
-
-
-    setTimeout(function() {
-
-        // Reset to original positions
-
-        leftImage.style.transform = 'translateX(0) scale(1)';
-
-        rightImage.style.transform = 'translateX(0) scale(1)';
-
-        leftImage.style.opacity = '1';
-
-        rightImage.style.opacity = '1';
-
-        
-
+    // 3. Reset everything
+    setTimeout(() => {
         centreImage.style.opacity = '0';
+        centreImage.style.transform = 'scale(1)';
+        centreImage.classList.add('hidden');
 
-        centreImage.style.transform = 'translateX(-50%) scale(0.8)';
+        leftImage.classList.remove('hidden');
+        rightImage.classList.remove('hidden');
+
+        // Use timeout to allow 'hidden' class removal to take effect before animating opacity
+        setTimeout(() => {
+            leftImage.style.left = '20%';
+            leftImage.style.opacity = '1';
+
+            rightImage.style.right = '20%';
+            rightImage.style.opacity = '1';
+
+            btn.disabled = false;
+            btn.textContent = "Send a Virtual Hug 🤗";
+        }, 100);
 
     }, 3500);
+});
 
-}
-
-
-
-// --- COUNTDOWN TIMER ---
-
-function updateCountdownDisplay(countdownDate) {
-
-    const now = new Date().getTime();
-
-    const distance = countdownDate - now;
-
-
-
-    if (distance < 0) {
-
-        clearInterval(countdownInterval);
-
-        document.getElementById('countdown-date').textContent = "The day has arrived!";
-
-        document.getElementById('days').textContent = '00';
-
-        document.getElementById('hours').textContent = '00';
-
-        document.getElementById('minutes').textContent = '00';
-
-        document.getElementById('seconds').textContent = '00';
-
-        return;
-
-    }
-
-
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-
-
-    document.getElementById('days').textContent = days < 10 ? `0${days}` : days;
-
-    document.getElementById('hours').textContent = hours < 10 ? `0${hours}` : hours;
-
-    document.getElementById('minutes').textContent = minutes < 10 ? `0${minutes}` : minutes;
-
-    document.getElementById('seconds').textContent = seconds < 10 ? `0${seconds}` : seconds;
-
-}
-
-
+// Countdown Timer System
+let countdownInterval;
 
 function startCountdown() {
-
     clearInterval(countdownInterval);
 
+    // Get stored values or defaults
+    const storedDate = localStorage.getItem('countdownDate');
+    const storedName = localStorage.getItem('specialDayName');
 
+    const countdownTarget = storedDate ? new Date(storedDate).getTime() : new Date('2026-12-31').getTime();
+    const specialDayName = storedName || 'Special Day';
 
-    const countdownDateStr = localStorage.getItem('countdownDate') || 'December 31, 2024';
-
-    const countdownDate = new Date(countdownDateStr).getTime();
-
-    const specialDayName = localStorage.getItem('specialDayName') || 'Special Day';
-
-
-
+    // Update UI text
     document.getElementById('special-day-name').textContent = specialDayName;
+    document.getElementById('countdown-date').textContent = new Date(countdownTarget).toLocaleDateString(undefined, {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
 
-    document.getElementById('countdown-date').textContent = new Date(countdownDate).toLocaleDateString();
+    // Run timer loop
+    countdownInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = countdownTarget - now;
 
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
+        // Pad with zeros
+        document.getElementById('days').textContent = days < 10 ? `0${days}` : days;
+        document.getElementById('hours').textContent = hours < 10 ? `0${hours}` : hours;
+        document.getElementById('minutes').textContent = minutes < 10 ? `0${minutes}` : minutes;
+        document.getElementById('seconds').textContent = seconds < 10 ? `0${seconds}` : seconds;
 
-    updateCountdownDisplay(countdownDate); 
-
-    countdownInterval = setInterval(() => updateCountdownDisplay(countdownDate), 1000);
-
+        // If finished
+        if (distance < 0) {
+            clearInterval(countdownInterval);
+            document.querySelector('.countdown-grid').innerHTML = '<h3>The day has arrived! 🎉</h3>';
+            document.getElementById('days').textContent = "00";
+        }
+    }, 1000);
 }
 
-
-
+// Edit Mode Functions
 function editCountdownDate() {
+    const editPanel = document.getElementById('edit-date-section');
+    editPanel.classList.toggle('hidden');
 
-    const currentDayName = localStorage.getItem('specialDayName') || 'Special Day';
+    // Pre-fill inputs
+    document.getElementById('new-special-day-name').value = document.getElementById('special-day-name').textContent;
 
-    const currentDate = localStorage.getItem('countdownDate') || '2024-12-31';
-
-
-
-    const dateObj = new Date(currentDate);
-
-    // Handle potential invalid date in storage
-
-    const formattedDate = !isNaN(dateObj) ? dateObj.toISOString().split('T')[0] : '2024-12-31';
-
-
-
-    document.getElementById('new-special-day-name').value = currentDayName;
-
-    document.getElementById('new-countdown-date').value = formattedDate;
-
-    
-
-    document.getElementById('edit-date-section').style.display = 'block';
-
+    // Format date for setting the input value safely
+    const existingDate = new Date(localStorage.getItem('countdownDate') || '2026-12-31');
+    // .toISOString() gives YYYY-MM-DDTHH... split to just get the date part
+    document.getElementById('new-countdown-date').value = existingDate.toISOString().split('T')[0];
 }
-
-
 
 function saveCountdownDate() {
+    const newName = document.getElementById('new-special-day-name').value;
+    const newDate = document.getElementById('new-countdown-date').value;
 
-    const newSpecialDayName = document.getElementById('new-special-day-name').value;
-
-    const newCountdownDate = document.getElementById('new-countdown-date').value;
-
-
-
-    // Check 1: Is the new date field empty? If so, just close.
-
-    if (!newCountdownDate) {
-
-        document.getElementById('edit-date-section').style.display = 'none';
-
+    if (!newDate) {
+        alert('Please select a valid date.');
         return;
-
     }
 
+    localStorage.setItem('specialDayName', newName);
+    localStorage.setItem('countdownDate', newDate);
 
+    document.getElementById('edit-date-section').classList.add('hidden');
+    startCountdown();
+}
 
-    // Check 2: Is the date a valid, parseable date?
+// Image Upload Logic
+function triggerUpload(person) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => handleImageUpload(e, person);
+    input.click();
+}
 
-    if (Date.parse(newCountdownDate)) {
-
-        const today = new Date();
-
-        today.setHours(0, 0, 0, 0);
-
-        const selectedDate = new Date(newCountdownDate);
-
-        selectedDate.setMinutes(selectedDate.getMinutes() + selectedDate.getTimezoneOffset()); // Fix timezone bug
-
-
-
-        // Check 3: Is the date in the future?
-
-        if (selectedDate >= today) {
-
-            try {
-
-                localStorage.setItem('specialDayName', newSpecialDayName || 'Special Day');
-
-                localStorage.setItem('countdownDate', newCountdownDate);
-
-                startCountdown(); // Refresh countdown with new date
-
-            } catch (error) {
-
-                console.error('Error saving countdown data:', error);
-
-            }
-
+function handleImageUpload(event, person) {
+    const file = event.target.files[0];
+    if (file) {
+        // Limit file size to 500KB to prevent localStorage quota errors
+        if (file.size > 500 * 1024) {
+            alert("File is too large! Please select an image under 500KB.");
+            return;
         }
 
-    }
-
-    
-
-    // Always hide the edit box, whether we saved or not
-
-    document.getElementById('edit-date-section').style.display = 'none';
-
-}
-
-
-
-// --- IMAGE UPLOAD ---
-
-function triggerUpload(circle) {
-
-    const input = document.createElement('input');
-
-    input.type = 'file';
-
-    input.accept = 'image/*';
-
-    input.onchange = (event) => handleImageUpload(event, circle);
-
-    input.click();
-
-}
-
-
-
-function handleImageUpload(event, circle) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const tx = db.transaction("images", "readwrite");
-    const store = tx.objectStore("images");
-
-    store.put(file, circle);
-
-    tx.oncomplete = () => {
-        const imgURL = URL.createObjectURL(file);
-        displayImage(circle, imgURL);
-    };
-}
-
-
-
-
-function displayImage(circle, imageData) {
-
-    const element = document.querySelector(`[data-circle="${circle}"]`);
-
-    if (!element) return;
-
-
-
-    let imgElement;
-
-    let textElement;
-
-
-
-    if (element.tagName === 'IMG') {
-
-        imgElement = element;
-
-    } else {
-
-        imgElement = element.querySelector('img');
-
-        textElement = element.querySelector('span');
-
-    }
-
-
-
-    if (imgElement) {
-
-        imgElement.src = imageData;
-
-    }
-
-    if (textElement) {
-
-        textElement.style.display = 'none';
-
-    }
-
-}
-
-
-
-function loadImages() {
-    if (!db) return;
-
-    const tx = db.transaction("images", "readonly");
-    const store = tx.objectStore("images");
-
-    const circles = [
-        'aamir','place','bsmla',
-        'left-window','right-window',
-        'left-hug','centre-hug','right-hug'
-    ];
-
-    circles.forEach(circle => {
-        const req = store.get(circle);
-        req.onsuccess = () => {
-            if (req.result) {
-                const imgURL = URL.createObjectURL(req.result);
-                displayImage(circle, imgURL);
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const imageData = e.target.result;
+            try {
+                localStorage.setItem(`img_${person}`, imageData);
+                displayImage(person, imageData);
+            } catch (err) {
+                alert("Storage full! Unable to save image.");
+                console.error("LocalStorage error:", err);
             }
         };
+        reader.readAsDataURL(file);
+    }
+}
+
+function displayImage(person, data) {
+    const imgElement = document.getElementById(`img-${person}`);
+    if (imgElement) {
+        imgElement.src = data;
+    }
+}
+
+function loadSavedImages() {
+    ['aamir', 'place', 'bsmla'].forEach(person => {
+        const saved = localStorage.getItem(`img_${person}`);
+        if (saved) {
+            displayImage(person, saved);
+        }
     });
 }
 
-
-
-
-// --- BUTTERFLY TEXT ---
-
+// Love Notes System
 const loveSentences = [
-
-   "Every moment with you is a treasure. 💖",
-
-   "You are the light of my life. ✨",
-
-   "My heart beats for you, forever. 💕",
-
-   "You complete me in every way. 🧩",
-
-   "I can't wait to meet you. 🌍",
-
-   "Our love knows no distance. 🌙",
-
-   "Together, we make magic. ✨",
-
-   "You’re not just in my thoughts; you’re in every beat of my heart. 💓",
-
-   "Every night, I look at the moon, knowing you might be seeing the same one. 🌙",
-
-   "The distance between us only makes my love for you grow stronger. 🌍💕",
-
-   "You’re the missing piece in my life, and I can’t wait to feel complete. 🧩❤️",
-
-   "Every time we talk, it feels like the world disappears, and it’s just us. 🌟",
-
-   "I catch myself smiling every time I think about you... which is all the time. 😊💖",
-
-   "The thought of meeting you in Dubai keeps me going every day. 🕌💕",
-
-   "If love were a journey, I’d travel across galaxies just to hold your hand. 🚀💫",
-
-   "I don’t need the stars when I already have you lighting up my life. ✨",
-
-   "Your voice is my favorite melody, and I can’t wait to hear it in person. 🎶💞",
-
-   "You’re my favorite notification, my sweetest distraction. 📱💌",
-
-   "I may be in Nepal, and you in Algeria, but my heart is wherever you are. 🌏❤️",
-
-   "Every good morning and goodnight from you feels like a gentle hug. 🤗💖",
-
-   "I dream of the day I can see your smile for real and hold your hand. 🌈💕",
-
-   "Your kindness, your laughter, your love—it’s all I need to be happy. 🌹💘",
-
-   "You make me believe that even across oceans, love knows no limits. 🌊💞",
-
-   "One day, our 'goodnights' will turn into 'good mornings' side by side. 🌄💑",
-
-   "I don’t just miss you; I miss the future we’ll create together. 🛤️❤️",
-
-   "They say patience is a virtue, but waiting for you is the sweetest test of all. ⏳💕",
-
-   "If I could, I’d bottle up every moment we’ve shared and keep it close forever. 🫶💝"
-
+    "Every moment with you is a treasure. 💖",
+    "You are the light of my life. ✨",
+    "My heart beats for you, forever. 💕",
+    "You complete me in every way. 🧩",
+    "I can't wait to meet you. 🌍",
+    "Our love knows no distance. 🌙",
+    "Together, we make magic. ✨",
+    "You’re not just in my thoughts; you’re in every beat of my heart. 💓",
+    "Every night, I look at the moon, knowing you might be seeing the same one. 🌙",
+    "The distance between us only makes my love for you grow stronger. 🌍💕",
+    "You’re the missing piece in my life, and I can’t wait to feel complete. 🧩❤️",
+    "Every time we talk, it feels like the world disappears, and it’s just us. 🌟",
+    "I catch myself smiling every time I think about you... which is all the time. 😊💖",
+    "The thought of meeting you in Dubai keeps me going every day. 🕌💕",
+    "If love were a journey, I’d travel across galaxies just to hold your hand. 🚀💫",
+    "I don’t need the stars when I already have you lighting up my life. ✨",
+    "Your voice is my favorite melody, and I can’t wait to hear it in person. 🎶💞",
+    "You’re my favorite notification, my sweetest distraction. 📱💌",
+    "I may be in Nepal, and you in Algeria, but my heart is wherever you are. 🌏❤️",
+    "Every good morning and goodnight from you feels like a gentle hug. 🤗💖",
+    "I dream of the day I can see your smile for real and hold your hand. 🌈💕",
+    "Your kindness, your laughter, your love—it’s all I need to be happy. 🌹💘",
+    "You make me believe that even across oceans, love knows no limits. 🌊💞",
+    "One day, our 'goodnights' will turn into 'good mornings' side by side. 🌄💑",
+    "I don’t just miss you; I miss the future we’ll create together. 🛤️❤️",
+    "They say patience is a virtue, but waiting for you is the sweetest test of all. ⏳💕",
+    "If I could, I’d bottle up every moment we’ve shared and keep it close forever. 🫶💝"
 ];
 
+const butterfly = document.getElementById('butterfly');
+const loveText = document.getElementById('love-text');
+let sentenceIndex = 0;
 
+butterfly.addEventListener('click', () => {
+    // Reset animation
+    loveText.classList.remove('visible');
+    loveText.style.opacity = '0'; // immediate hide
 
-function changeLoveSentence() {
-
-    loveText.style.opacity = 0;
+    // Add fly away animation
+    butterfly.style.transform = 'translateY(-20px) rotate(10deg)';
 
     setTimeout(() => {
+        loveText.textContent = loveSentences[sentenceIndex];
+        loveText.style.opacity = ''; // clear inline style to let class handle it
+        loveText.classList.add('visible'); // Trigger CSS animation
 
-        loveText.textContent = loveSentences[currentSentenceIndex];
+        butterfly.style.transform = 'translateY(0) rotate(0deg)';
 
-        loveText.style.opacity = 1;
+        sentenceIndex = (sentenceIndex + 1) % loveSentences.length;
+    }, 400);
+});
 
-        currentSentenceIndex = (currentSentenceIndex + 1) % loveSentences.length;
 
-    }, 1000);
+// Side Window Interaction
+function changeImage(side) {
+    const img = document.getElementById(`${side}-window`);
+    const originalSrc = `${side}-window.jpg`;
+    const kissSrc = `${side}-kiss.jpg`;
 
+    // Swap source with fade effect (CSS transition handles opacity if we toggled class, 
+    // but here we just swap src. To make it smoother we could fade out first)
+    img.style.opacity = '0.5';
+
+    setTimeout(() => {
+        img.src = kissSrc;
+        img.style.opacity = '1';
+    }, 200);
+
+    setTimeout(() => {
+        img.style.opacity = '0.5';
+        setTimeout(() => {
+            img.src = originalSrc;
+            img.style.opacity = '1';
+        }, 200);
+    }, 3000);
 }
 
 
+// Music Player Logic
+const playBtn = document.getElementById('play-pause-btn');
+const audio = document.getElementById('bg-music');
+const musicStatus = document.querySelector('.music-status');
+let isPlaying = false;
 
-// --- WINDOW KISS ANIMATION ---
+playBtn.addEventListener('click', () => {
+    if (isPlaying) {
+        audio.pause();
+        playBtn.textContent = '▶';
+        playBtn.classList.remove('playing');
+        musicStatus.textContent = 'Paused';
+    } else {
+        // Attempt to play - might fail if no source, but UI will update
+        const playPromise = audio.play();
 
-function triggerKissAnimation() {
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                // Play started
+            }).catch(error => {
+                console.log("Audio play failed (expected if source missing):", error);
+                // We'll still update UI to simulate it for the user
+            });
+        }
 
-    if (isKissAnimationRunning) return;
+        playBtn.textContent = '⏸';
+        playBtn.classList.add('playing');
+        musicStatus.textContent = 'Playing... 🎶';
+    }
+    isPlaying = !isPlaying;
+});
 
-    isKissAnimationRunning = true;
-
-
-
-    const leftWindow = document.getElementById('left-window');
-
-    const rightWindow = document.getElementById('right-window');
-
-
-
-    const originalLeftSrc = localStorage.getItem('left-window') || 'left-window.jpg';
-
-    const originalRightSrc = localStorage.getItem('right-window') || 'right-window.jpg';
-
-
-
-    leftWindow.src = 'left-kiss.jpg'; 
-
-
-
-    setTimeout(() => {
-
-        rightWindow.src = 'right-kiss.jpg'; 
-
-    }, 2000);
-
-
-
-    setTimeout(() => {
-
-        leftWindow.src = originalLeftSrc;
-
-        rightWindow.src = originalRightSrc;
-
-        isKissAnimationRunning = false;
-
-    }, 8000);
-
-}
+// Reset Functionality
+document.getElementById('reset-btn').addEventListener('click', () => {
+    if (confirm("Are you sure you want to clear all customization?")) {
+        localStorage.clear();
+        location.reload();
+    }
+});
 
 
-
-// --- CLICK VS. DOUBLE-CLICK ---
-
-function setupWindowClickEvents(dataCircle) {
-
-    const windowElement = document.querySelector(`[data-circle="${dataCircle}"]`);
-
-    let clickTimer = null;
-
-
-
-    windowElement.addEventListener('click', () => {
-
-        clickTimer = setTimeout(() => {
-
-            if (!isKissAnimationRunning) {
-
-                 triggerKissAnimation();
-
-            }
-
-        }, 250);
-
-    });
-
-
-
-    windowElement.addEventListener('dblclick', (e) => {
-
-        e.preventDefault();
-
-        clearTimeout(clickTimer);
-
-        triggerUpload(dataCircle);
-
-    });
-
-}
-
-
-
-// --- INITIALIZE ON PAGE LOAD ---
-
-window.onload = function() {
-
-    // Load data from storage
-
-    loadImages();
-
+// Initialization
+window.addEventListener('DOMContentLoaded', () => {
     startCountdown();
-
-
-
-    // Set up all event listeners
-
-    document.getElementById('hug-btn').addEventListener('click', triggerHugAnimation);
-
-    document.getElementById('edit-countdown-trigger').addEventListener('click', editCountdownDate);
-
-    document.getElementById('save-countdown-btn').addEventListener('click', saveCountdownDate);
-
-    butterfly.addEventListener('click', changeLoveSentence);
-
-
-
-    // Click listeners for simple image uploads
-
-    document.querySelector('[data-circle="aamir"]').addEventListener('click', () => triggerUpload('aamir'));
-
-    document.querySelector('[data-circle="bsmla"]').addEventListener('click', () => triggerUpload('bsmla'));
-
-    document.querySelector('[data-circle="place"]').addEventListener('click', () => triggerUpload('place'));
-
-    document.querySelector('[data-circle="left-hug"]').addEventListener('click', () => triggerUpload('left-hug'));
-
-    document.querySelector('[data-circle="centre-hug"]').addEventListener('click', () => triggerUpload('centre-hug'));
-
-    document.querySelector('[data-circle="right-hug"]').addEventListener('click', () => triggerUpload('right-hug'));
-
-
-
-    // Click/Double-click listeners for windows
-
-    setupWindowClickEvents('left-window');
-
-    setupWindowClickEvents('right-window');
-
-};
+    loadSavedImages();
+    createFloatingHearts();
+    startTypewriter();
+});
