@@ -737,3 +737,36 @@ button:hover:not(:disabled) {
     cursor: pointer;
 
 }
+/* UNIVERSAL RESPONSIVE FIX */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Fix absolute-position overflow */
+body {
+    overflow-x: hidden;
+}
+
+/* Hug images responsive */
+@media (max-width: 768px) {
+    #left-image, #right-image, #centre-image {
+        width: 140px;
+        height: 140px;
+        top: auto;
+        bottom: 120px;
+        position: fixed;
+    }
+
+    #hug-btn {
+        margin-top: 120px;
+    }
+}
+
+/* Windows responsive */
+@media (max-width: 768px) {
+    .window {
+        width: 120px;
+        height: 120px;
+    }
+}
