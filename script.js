@@ -1,3 +1,24 @@
+// ================= FIREBASE INIT (bsmla07) =================
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBwYOSxzcsunbsA7_EeJCR73IlQPqFzZmc",
+  authDomain: "bsmla07.firebaseapp.com",
+  projectId: "bsmla07",
+  storageBucket: "bsmla07.firebasestorage.app",
+  messagingSenderId: "578331045340",
+  appId: "1:578331045340:web:3ae5c2919fc3a7c9367319"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+// Firestore references (DO NOT rename)
+const firestoreDB = firebase.firestore();
+const stateRef = firestoreDB.collection("state").doc("main");
+
+// ==========================================================
+
+
+
 // --- INDEXED DB FOR IMAGE STORAGE ---
 let db;
 
