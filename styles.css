@@ -1,1 +1,773 @@
+* { 
+
+    margin: 0; 
+
+    padding: 0; 
+
+    box-sizing: border-box; 
+
+}
+
+
+
+body { 
+
+    font-family: Arial, sans-serif; 
+
+    background: linear-gradient(135deg, #f4f4f9, #f1c6d8); 
+
+    color: #333; 
+
+    line-height: 1.6; 
+
+    min-height: 100vh; /* <-- ADDED FIX */
+
+}
+
+
+
+.container { 
+
+    max-width: 1000px; 
+
+    margin: auto; 
+
+    padding: 20px; 
+
+    text-align: center; 
+
+}
+
+
+
+h1 { 
+
+    font-size: 2.4rem; 
+
+    color: #000; 
+
+    white-space: nowrap; 
+
+}
+
+
+
+h1 span { 
+
+    color: #e91e63; 
+
+    display: inline; 
+
+}
+
+
+
+p { 
+
+    font-size: 1.2rem; 
+
+    color: mediumvioletred; 
+
+    font-style: italic; 
+
+    font-weight: 300; 
+
+    letter-spacing: 1px; 
+
+    max-width: 700px; 
+
+    margin: 0 auto 20px; 
+
+}
+
+
+
+/* Countdown Timer Section */
+
+.countdown-timer { 
+
+    position: absolute; 
+
+    top: 100px; 
+
+    left: 20px; 
+
+    text-align: center; 
+
+    font-size: 0.9rem; 
+
+    z-index: 100;
+
+}
+
+
+
+.countdown-timer h2 { 
+
+    font-size: 1.2rem; 
+
+    color: #e91e63; 
+
+    font-weight: bold; 
+
+    margin-bottom: 10px; 
+
+}
+
+
+
+.countdown { 
+
+    display: flex; 
+
+    justify-content: center; 
+
+    gap: 10px; 
+
+    font-size: 1rem; 
+
+    color: #333; 
+
+    font-weight: bold; 
+
+}
+
+
+
+.countdown-item { 
+
+    display: flex; 
+
+    flex-direction: column; 
+
+    align-items: center; 
+
+    background: #f9c0c9; 
+
+    padding: 10px; 
+
+    border-radius: 8px; 
+
+    width: 80px; 
+
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); 
+
+}
+
+
+
+.countdown-item span { 
+
+    font-size: 1.6rem; 
+
+    color: #e91e63; 
+
+    margin-bottom: 5px; 
+
+    font-weight: bold; 
+
+}
+
+
+
+.countdown-item label { 
+
+    font-size: 0.9rem; 
+
+    color: #333; 
+
+    text-transform: uppercase; 
+
+}
+
+
+
+.countdown-date { 
+
+    font-size: 1rem; 
+
+    color: #e91e63; 
+
+    font-style: italic; 
+
+    margin-top: 10px; 
+
+    cursor: pointer; 
+
+}
+
+
+
+/* Styling for the date edit box */
+
+#edit-date-section {
+
+    background: #f9c0c9; 
+
+    padding: 15px;
+
+    border-radius: 8px;
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    margin-top: 10px;
+
+}
+
+
+
+#edit-date-section input {
+
+    display: block;
+
+    width: 100%;
+
+    margin-bottom: 10px;
+
+    padding: 8px;
+
+    border: 1px solid #d1a1c0;
+
+    border-radius: 5px;
+
+}
+
+
+
+/* Fix button positioning */
+
+#edit-date-section button {
+
+    margin-top: 5px; 
+
+    z-index: 10; 
+
+}
+
+
+
+
+
+/* Photo Section */
+
+.photo-section { 
+
+    display: flex; 
+
+    justify-content: center; 
+
+    gap: 20px; 
+
+    margin: 40px 0; 
+
+}
+
+
+
+.photo-circle, .upload-circle { 
+
+    position: relative; 
+
+    width: 130px; 
+
+    height: 130px; 
+
+    border-radius: 50%; 
+
+    overflow: hidden; 
+
+    border: 3px solid #d1a1c0; 
+
+    cursor: pointer; 
+
+    transition: 0.3s; 
+
+    display: flex; 
+
+    justify-content: center; 
+
+    align-items: center; 
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+
+}
+
+
+
+.photo-circle img, .upload-circle img { 
+
+    width: 100%; 
+
+    height: 100%; 
+
+    object-fit: cover; 
+
+}
+
+
+
+.photo-circle:hover, .upload-circle:hover { 
+
+    transform: scale(1.05); 
+
+}
+
+
+
+.photo-circle span, .upload-circle span { 
+
+    position: absolute; 
+
+    top: 50%; 
+
+    left: 50%; 
+
+    transform: translate(-50%, -50%); 
+
+    font-size: 0.9rem; 
+
+    color: #000; 
+
+    text-align: center; 
+
+    width: 100%; 
+
+    padding: 0 5px; 
+
+}
+
+
+
+.emoji-wrapper { 
+
+    display: flex; 
+
+    align-items: center; 
+
+    gap: 15px; 
+
+}
+
+
+
+.emoji-left, .emoji-right { 
+
+    font-size: 2.5rem; 
+
+}
+
+
+
+button { 
+
+    background: #e91e63; 
+
+    border: none; 
+
+    padding: 8px 16px; 
+
+    margin-top: 30px; 
+
+    font-size: 1.1rem; 
+
+    color: #fff; 
+
+    border-radius: 5px; 
+
+    cursor: pointer; 
+
+    transition: 0.3s; 
+
+    font-weight: bold; 
+
+}
+
+
+
+button:hover:not(:disabled) { 
+
+    background: #d81b60; 
+
+}
+
+
+
+footer { 
+
+    margin-top: 10px;  
+
+    font-size: 1.5rem;  
+
+    font-weight: bold;  
+
+    color: #d81b60;  
+
+    font-style: italic; 
+
+    text-align: center; 
+
+    content: "Every moment with you is a treasure. 💖";
+
+}
+
+
+
+.countdown-date:hover {
+
+    text-decoration: underline;
+
+    color: #d81b60;
+
+    cursor: pointer;
+
+}
+
+
+
+button:hover:not(:disabled) {
+
+    background: #c2185b;
+
+    transform: scale(1.05);
+
+}
+
+
+
+/* Butterfly animation styles */
+
+.butterfly {
+
+    font-size: 120px;
+
+    display: inline-block;
+
+    animation: beat 1.2s infinite;
+
+    cursor: pointer;
+
+    transition: transform 0.3s ease;
+
+    position: relative;  
+
+    top: -60px;  
+
+}
+
+
+
+/* Butterfly animation keyframes */
+
+@keyframes beat {
+
+    0% { transform: scale(1); }
+
+    25% { transform: scale(1.1); }
+
+    50% { transform: scale(1.2); }
+
+    60% { transform: scale(1.1); }
+
+    75% { transform: scale(1.05); }
+
+    100% { transform: scale(1); }
+
+}
+
+
+
+.text-container {
+
+    margin-top: -80px;
+
+}
+
+
+
+#love-text {
+
+    font-size: 1.5rem;
+
+    color: #e91e63;
+
+    font-style: italic;
+
+    font-weight: bold;
+
+    opacity: 0;
+
+    transition: opacity 1s ease-in-out;
+
+}
+
+
+
+/* Virtual Hug Section */
+
+#left-image, #right-image, #centre-image {
+
+    width: 200px;
+
+    height: 200px;
+
+    position: absolute;
+
+    transition: all 1s ease-in-out;
+
+    top: 450px;
+
+}
+
+
+
+#left-image { left: 20%; }
+
+#right-image { right: 20%; }
+
+
+
+#centre-image {
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    opacity: 0;
+
+}
+
+
+
+.hidden {
+
+    visibility: hidden;
+
+}
+
+
+
+#centre-image img {
+
+    width: 100px;
+
+    height: 100px;
+
+}
+
+
+
+#hug-btn {
+
+    padding: 10px 20px;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    background-color: #FF69B4;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 5px;
+
+    transition: background-color 0.3s ease;
+
+    margin-top: 200px;
+
+    position: relative;
+
+}
+
+
+
+#hug-btn:hover {
+
+    background-color: #FF1493;
+
+}
+
+
+
+/* Responsive styles */
+
+@media (max-width: 768px) {
+
+    .butterfly { font-size: 80px; }
+
+}
+
+
+
+@media (max-width: 480px) {
+
+    h1 { font-size: 2rem; }
+
+    .countdown { flex-direction: column; gap: 15px; }
+
+    .countdown-item { width: 60px; padding: 6px; }
+
+    .countdown-item span { font-size: 1.2rem; }
+
+    .countdown-item label { font-size: 0.7rem; }
+
+    .photo-circle, .upload-circle { width: 100px; height: 100px; }
+
+    .emoji-left, .emoji-right { font-size: 1.5rem; }
+
+    .container { padding: 15px; }
+
+    p { font-size: 1rem; }
+
+    footer { font-size: 1rem; }
+
+    .countdown-timer { top: 80px; left: 5px; font-size: 0.7rem; }
+
+    .countdown-timer h2 { font-size: 0.9rem; }
+
+    .countdown-item span { font-size: 1rem; }
+
+    .countdown-date { font-size: 0.8rem; }
+
+}
+
+
+
+/* Window positioning */
+
+.window-container {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 0;
+
+    right: 0;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    width: 100%;
+
+    margin-top: -120px;
+
+}
+
+
+
+#left-window, #right-window {
+
+    position: absolute;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 200px;
+
+    height: auto;
+
+}
+
+
+
+#left-window { left: 0; }
+
+#right-window { right: 0; }
+
+
+
+#left-window img, #right-window img {
+
+    margin: 0;
+
+    padding: 0;
+
+    display: block;
+
+}
+
+
+
+.image-container {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+
+
+.window {
+
+    width: 200px;
+
+    height: 200px;
+
+    cursor: pointer;
+
+    transition: all 1s ease-in-out;
+
+}
+
+
+
+.kiss {
+
+    width: 200px;
+
+    height: 200px;
+
+    object-fit: cover;
+
+}
+
+
+
+.window, .hug-image {
+
+    cursor: pointer;
+
+}
+/* UNIVERSAL RESPONSIVE FIX */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Fix absolute-position overflow */
+body {
+    overflow-x: hidden;
+}
+
+/* Hug images responsive */
+@media (max-width: 768px) {
+    #left-image, #right-image, #centre-image {
+        width: 140px;
+        height: 140px;
+        top: auto;
+        bottom: 120px;
+        position: fixed;
+    }
+
+    #hug-btn {
+        margin-top: 120px;
+    }
+}
+
+/* Windows responsive */
+@media (max-width: 768px) {
+    .window {
+        width: 120px;
+        height: 120px;
+    }
+}
 
