@@ -273,6 +273,62 @@ function loadSavedImages() {
     });
 }
 
+// ========== VIRTUAL KISS SYSTEM ==========
+function sendKiss() {
+    const btn = document.getElementById('kiss-btn');
+    const explosion = document.getElementById('kiss-explosion');
+    const message = document.getElementById('kiss-message');
+
+    if (!btn || !explosion || !message) return;
+
+    const messages = [
+        "A kiss sent with all my love! 💋",
+        "MWAH! 😘💕",
+        "A little kiss across the miles! 💖",
+        "Thinking of you... 💗",
+        "This one is just for you! 💋✨"
+    ];
+
+    // Button feedback
+    btn.style.transform = 'scale(1.3) rotate(15deg)';
+    setTimeout(() => btn.style.transform = '', 300);
+
+    // Heart explosion
+    const particles = ['❤️', '💕', '💖', '✨', '💋', '🌸'];
+    for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'kiss-particle';
+        p.textContent = particles[Math.floor(Math.random() * particles.length)];
+
+        // Random trajectory
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 100 + Math.random() * 100;
+        const duration = 0.6 + Math.random() * 0.6;
+
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+
+        p.style.transition = `all ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+        explosion.appendChild(p);
+
+        // Animate
+        requestAnimationFrame(() => {
+            p.style.transform = `translate(${tx}px, ${ty}px) scale(${0.5 + Math.random()})`;
+            p.style.opacity = '0';
+        });
+
+        setTimeout(() => p.remove(), duration * 1000);
+    }
+
+    // Show message
+    message.textContent = messages[Math.floor(Math.random() * messages.length)];
+    message.classList.add('visible');
+
+    setTimeout(() => {
+        message.classList.remove('visible');
+    }, 2500);
+}
+
 // ========== MILESTONES TIMELINE SYSTEM ==========
 let editingMilestoneIndex = -1;
 

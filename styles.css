@@ -558,6 +558,84 @@ button {
     background: #ff69b4;
 }
 
+.section-title-mini {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* ========== VIRTUAL KISS ========== */
+.kiss-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    padding: 20px;
+}
+
+.kiss-btn {
+    font-size: 4rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: kissFloat 2s ease-in-out infinite;
+    z-index: 5;
+}
+
+.kiss-btn:hover {
+    transform: scale(1.2);
+}
+
+.kiss-btn:active {
+    transform: scale(0.9);
+}
+
+@keyframes kissFloat {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(-5deg);
+    }
+
+    50% {
+        transform: translateY(-10px) rotate(5deg);
+    }
+}
+
+.kiss-explosion {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.kiss-particle {
+    position: absolute;
+    font-size: 1.5rem;
+    pointer-events: none;
+    user-select: none;
+}
+
+.kiss-message {
+    font-size: 1rem;
+    color: var(--text-muted);
+    min-height: 1.5rem;
+    font-style: italic;
+    transition: opacity 0.5s, transform 0.5s;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.kiss-message.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* ========== MILESTONES SECTION ========== */
 .milestones-section {
     position: relative;
