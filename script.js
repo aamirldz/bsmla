@@ -1,3 +1,35 @@
+// ========== THEME SWITCHER SYSTEM ==========
+function initThemeSwitcher() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeOpts = document.querySelectorAll('.theme-opt');
+    const savedTheme = localStorage.getItem('romanticTheme') || 'moonlight';
+
+    // Apply saved theme
+    document.body.className = `theme-${savedTheme}`;
+    updateActiveThemeOpt(savedTheme);
+
+    themeOpts.forEach(opt => {
+        opt.addEventListener('click', () => {
+            const theme = opt.dataset.theme;
+            document.body.className = `theme-${theme}`;
+            localStorage.setItem('romanticTheme', theme);
+            updateActiveThemeOpt(theme);
+
+            // Animation feedback
+            opt.style.transform = 'scale(1.5)';
+            setTimeout(() => opt.style.transform = '', 300);
+        });
+    });
+
+    function updateActiveThemeOpt(theme) {
+        themeOpts.forEach(o => o.classList.toggle('active', o.dataset.theme === theme));
+        const icon = themeToggle.querySelector('.icon');
+        if (theme === 'moonlight') icon.textContent = '🌙';
+        else if (theme === 'sunset') icon.textContent = '🌅';
+        else if (theme === 'cherry') icon.textContent = '🌸';
+    }
+}
+
 // Romantic Features: Floating Hearts & Typewriter
 
 function createFloatingHearts() {
@@ -241,6 +273,133 @@ function loadSavedImages() {
     });
 }
 
+// ========== MILESTONES TIMELINE SYSTEM ==========
+let editingMilestoneIndex = -1;
+
+const defaultMilestones = [
+    {
+        title: "The Beginning",
+        desc: "The day we first connected and felt the spark 💫",
+        date: "2023-11-20"
+    },
+    {
+        title: "First Conversation",
+        desc: "When we talked for hours and realized we are meant to be ✨",
+        date: "2023-11-21"
+    },
+    {
+        title: "Future Dream",
+        desc: "The beautiful dream of meeting in Dubai 🌍💕",
+        date: "2026-06-15"
+    }
+];
+
+function getMilestones() {
+    const saved = localStorage.getItem('loveMilestones');
+    return saved ? JSON.parse(saved) : defaultMilestones;
+}
+
+function saveMilestones(milestones) {
+    localStorage.setItem('loveMilestones', JSON.stringify(milestones));
+}
+
+function toggleMilestoneForm(index = -1) {
+    const container = document.getElementById('milestone-form-container');
+    const titleInput = document.getElementById('milestone-title-input');
+    const descInput = document.getElementById('milestone-desc-input');
+    const dateInput = document.getElementById('milestone-date-input');
+    const formTitle = document.getElementById('form-title');
+    const saveBtn = document.getElementById('save-milestone-btn');
+
+    if (index >= 0) {
+        // Edit mode
+        const milestones = getMilestones();
+        const m = milestones[index];
+        titleInput.value = m.title;
+        descInput.value = m.desc || "";
+        dateInput.value = m.date;
+        formTitle.textContent = "Edit This Memory";
+        saveBtn.textContent = "Update Memory";
+        editingMilestoneIndex = index;
+        container.classList.remove('hidden');
+    } else if (container.classList.contains('hidden')) {
+        // Add mode
+        titleInput.value = "";
+        descInput.value = "";
+        dateInput.value = new Date().toISOString().split('T')[0];
+        formTitle.textContent = "Add a New Memory";
+        saveBtn.textContent = "Save Memory";
+        editingMilestoneIndex = -1;
+        container.classList.remove('hidden');
+    } else {
+        container.classList.add('hidden');
+    }
+}
+
+function saveMilestone() {
+    const title = document.getElementById('milestone-title-input').value.trim();
+    const desc = document.getElementById('milestone-desc-input').value.trim();
+    const date = document.getElementById('milestone-date-input').value;
+
+    if (!title || !date) {
+        alert("Please provide at least a title and a date! 💕");
+        return;
+    }
+
+    const milestones = getMilestones();
+    const newMilestone = { title, desc, date };
+
+    if (editingMilestoneIndex >= 0) {
+        milestones[editingMilestoneIndex] = newMilestone;
+    } else {
+        milestones.push(newMilestone);
+    }
+
+    // Sort milestones by date
+    milestones.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    saveMilestones(milestones);
+    toggleMilestoneForm();
+    displayMilestones();
+}
+
+function deleteMilestone(index) {
+    if (confirm("Are you sure you want to delete this memory? 🥺")) {
+        const milestones = getMilestones();
+        milestones.splice(index, 1);
+        saveMilestones(milestones);
+        displayMilestones();
+    }
+}
+
+function displayMilestones() {
+    const timeline = document.getElementById('timeline');
+    if (!timeline) return;
+    const milestones = getMilestones();
+
+    timeline.innerHTML = milestones.map((m, index) => {
+        const dateObj = new Date(m.date);
+        const formattedDate = dateObj.toLocaleDateString(undefined, {
+            year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        return `
+            <div class="milestone reveal">
+                <div class="milestone-dot"></div>
+                <div class="milestone-content">
+                    <div class="milestone-actions">
+                        <button class="action-btn edit" onclick="toggleMilestoneForm(${index})" title="Edit">✎</button>
+                        <button class="action-btn delete" onclick="deleteMilestone(${index})" title="Delete">×</button>
+                    </div>
+                    <div class="milestone-date">${formattedDate}</div>
+                    <div class="milestone-title">${m.title}</div>
+                    <div class="milestone-desc">${m.desc || ""}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
 // Love Notes System
 const loveSentences = [
     "Every moment with you is a treasure. 💖",
@@ -299,24 +458,32 @@ butterfly.addEventListener('click', () => {
 // Side Window Interaction
 function changeImage(side) {
     const img = document.getElementById(`${side}-window`);
+    if (!img || img.classList.contains('animating')) return;
+
+    img.classList.add('animating');
     const originalSrc = `${side}-window.jpg`;
     const kissSrc = `${side}-kiss.jpg`;
 
-    // Swap source with fade effect (CSS transition handles opacity if we toggled class, 
-    // but here we just swap src. To make it smoother we could fade out first)
-    img.style.opacity = '0.5';
+    // Visual feedback for click
+    img.style.transform = 'scale(1.1)';
+    img.style.opacity = '0.7';
 
     setTimeout(() => {
         img.src = kissSrc;
         img.style.opacity = '1';
-    }, 200);
+        img.style.filter = 'drop-shadow(0 0 20px rgba(255, 77, 109, 0.5))';
+    }, 300);
 
     setTimeout(() => {
-        img.style.opacity = '0.5';
+        img.style.opacity = '0.7';
+        img.style.transform = 'scale(1)';
+
         setTimeout(() => {
             img.src = originalSrc;
             img.style.opacity = '1';
-        }, 200);
+            img.style.filter = '';
+            img.classList.remove('animating');
+        }, 300);
     }, 3000);
 }
 
@@ -364,8 +531,10 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 
 // Initialization
 window.addEventListener('DOMContentLoaded', () => {
+    initThemeSwitcher();
     startCountdown();
     loadSavedImages();
     createFloatingHearts();
     startTypewriter();
+    displayMilestones();
 });

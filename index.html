@@ -17,6 +17,20 @@
 </head>
 
 <body>
+    <!-- Theme Switcher -->
+    <div class="theme-switch-container">
+        <div class="theme-switch-wrapper">
+            <button class="theme-switch-btn" id="theme-toggle" title="Change Theme">
+                <span class="icon">✨</span>
+            </button>
+            <div class="theme-options">
+                <div class="theme-opt moonlight active" data-theme="moonlight" title="Moonlight"></div>
+                <div class="theme-opt sunset" data-theme="sunset" title="Sunset"></div>
+                <div class="theme-opt cherry" data-theme="cherry" title="Cherry"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="background-overlay"></div>
 
     <main class="container">
@@ -112,6 +126,31 @@
                 </div>
             </section>
 
+            <!-- Milestones Timeline -->
+            <section class="milestones-section">
+                <h2 class="section-title">✨ Our Journey Together ✨</h2>
+                <div id="timeline" class="timeline"></div>
+
+                <div class="milestone-controls">
+                    <button class="btn-primary" onclick="toggleMilestoneForm()">Add New Memory</button>
+                </div>
+
+                <!-- Milestone Form -->
+                <div id="milestone-form-container" class="edit-panel hidden">
+                    <h4 id="form-title">Add a New Memory</h4>
+                    <div class="input-group">
+                        <input type="text" id="milestone-title-input" placeholder="Title of the memory">
+                        <textarea id="milestone-desc-input" placeholder="Description (optional)"></textarea>
+                        <input type="date" id="milestone-date-input">
+                    </div>
+                    <div class="form-actions">
+                        <button id="save-milestone-btn" class="btn-primary" onclick="saveMilestone()">Save
+                            Memory</button>
+                        <button class="btn-secondary" onclick="toggleMilestoneForm()">Cancel</button>
+                    </div>
+                </div>
+            </section>
+
             <!-- Interactive Text Section -->
             <section class="love-notes">
                 <div class="butterfly-container" id="butterfly">
@@ -145,7 +184,7 @@
         </div>
 
         <div class="controls">
-            <button id="reset-btn" class="btn-text">Reset Experience</button>
+            <button id="reset-btn" class="btn-text" title="Clear all local data">Reset Experience</button>
         </div>
 
         <footer>
