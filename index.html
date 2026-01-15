@@ -200,12 +200,20 @@
         </footer>
 
         <!-- Music Player Widget -->
-        <div class="music-player">
+        <div class="music-player" id="music-player">
+            <div class="music-visualizer">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
             <div class="music-info">
-                <span class="music-title">Our Song 🎵</span>
+                <span class="music-title" title="Click to add your song">🎵 Our Song</span>
+                <span class="music-hint">Click to add music</span>
                 <span class="music-status">Paused</span>
             </div>
-            <button id="play-pause-btn" class="play-btn">▶</button>
+            <button id="play-pause-btn" class="play-btn" title="Play/Pause">▶</button>
             <audio id="bg-music" loop>
                 <!-- User should add their song here -->
                 <source src="our-song.mp3" type="audio/mpeg">

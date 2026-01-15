@@ -209,26 +209,27 @@ document.getElementById('hug-btn').addEventListener('click', function () {
     btn.disabled = true;
     btn.textContent = "Sending love... ❤️";
 
-    // 1. Move images towards center (slower animation)
-    leftImage.style.transition = 'all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-    rightImage.style.transition = 'all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-    leftImage.style.left = '40%';
+    // 1. Move images towards center (slower, smoother animation)
+    leftImage.style.transition = 'all 2s ease-in-out';
+    rightImage.style.transition = 'all 2s ease-in-out';
+    leftImage.style.left = '42%';
     leftImage.style.opacity = '0';
 
-    rightImage.style.right = '40%';
+    rightImage.style.right = '42%';
     rightImage.style.opacity = '0';
 
-    // 2. Show center image (hug) - after 1200ms
+    // 2. Show center image (hug) - after 2000ms
     setTimeout(() => {
         leftImage.classList.add('hidden');
         rightImage.classList.add('hidden');
 
         centreImage.classList.remove('hidden');
+        centreImage.style.transition = 'all 0.8s ease-out';
         centreImage.style.opacity = '1';
-        centreImage.style.transform = 'scale(1.2) rotate(10deg)'; // Little pop effect
-    }, 1200);
+        centreImage.style.transform = 'scale(1.3) rotate(5deg)'; // Pop effect
+    }, 2000);
 
-    // 3. Reset everything - after 5000ms total
+    // 3. Reset everything - after 7000ms total (longer hug display)
     setTimeout(() => {
         centreImage.style.opacity = '0';
         centreImage.style.transform = 'scale(1)';
@@ -247,9 +248,9 @@ document.getElementById('hug-btn').addEventListener('click', function () {
 
             btn.disabled = false;
             btn.textContent = "Send a Virtual Hug 🤗";
-        }, 150);
+        }, 200);
 
-    }, 5000);
+    }, 7000);
 });
 
 // Countdown Timer System
@@ -675,6 +676,7 @@ const playBtn = document.getElementById('play-pause-btn');
 const audio = document.getElementById('bg-music');
 const musicStatus = document.querySelector('.music-status');
 const musicTitle = document.querySelector('.music-title');
+const musicPlayer = document.getElementById('music-player');
 let isPlaying = false;
 
 // Load saved song on startup
@@ -686,6 +688,7 @@ function loadSavedSong() {
         if (savedSongName) {
             musicTitle.textContent = savedSongName;
         }
+        musicPlayer.classList.add('has-song');
     }
 }
 
@@ -702,9 +705,9 @@ function uploadSong() {
 function handleSongUpload(event) {
     const file = event.target.files[0];
     if (file) {
-        // Check file size (limit to 10MB for localStorage)
-        if (file.size > 10 * 1024 * 1024) {
-            showToast('Song file is too large! Please use a file under 10MB.', 'error');
+        // Check file size (limit to 50MB for localStorage)
+        if (file.size > 50 * 1024 * 1024) {
+            showToast('Song file is too large! Please use a file under 50MB.', 'error');
             return;
         }
 
@@ -717,6 +720,7 @@ function handleSongUpload(event) {
 
                 audio.src = songData;
                 musicTitle.textContent = file.name.replace(/\.[^/.]+$/, "");
+                musicPlayer.classList.add('has-song');
                 showToast('Song added! Click play to listen 🎵', 'success');
             } catch (err) {
                 showToast('Unable to save song. Try a smaller file.', 'error');
@@ -729,8 +733,6 @@ function handleSongUpload(event) {
 
 // Add click handler to music title for uploading
 if (musicTitle) {
-    musicTitle.style.cursor = 'pointer';
-    musicTitle.title = 'Click to add your song';
     musicTitle.addEventListener('click', uploadSong);
 }
 
@@ -739,6 +741,7 @@ playBtn.addEventListener('click', () => {
         audio.pause();
         playBtn.textContent = '▶';
         playBtn.classList.remove('playing');
+        musicPlayer.classList.remove('playing');
         musicStatus.textContent = 'Paused';
     } else {
         // Check if there's a song source
@@ -752,18 +755,26 @@ playBtn.addEventListener('click', () => {
         if (playPromise !== undefined) {
             playPromise.then(_ => {
                 musicStatus.textContent = 'Playing... 🎶';
+                playBtn.textContent = '⏸';
+                playBtn.classList.add('playing');
+                musicPlayer.classList.add('playing');
             }).catch(error => {
                 console.log("Audio play failed:", error);
                 showToast('Unable to play. Try adding a song first.', 'warning');
                 return;
             });
         }
-
-        playBtn.textContent = '⏸';
-        playBtn.classList.add('playing');
-        musicStatus.textContent = 'Playing... 🎶';
     }
     isPlaying = !isPlaying;
+});
+
+// Update playing state if audio ends
+audio.addEventListener('ended', () => {
+    isPlaying = false;
+    playBtn.textContent = '▶';
+    playBtn.classList.remove('playing');
+    musicPlayer.classList.remove('playing');
+    musicStatus.textContent = 'Finished';
 });
 
 // Load saved song on page load
