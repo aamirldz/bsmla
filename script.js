@@ -679,14 +679,70 @@ const musicTitle = document.querySelector('.music-title');
 const musicPlayer = document.getElementById('music-player');
 let isPlaying = false;
 
+// IndexedDB Helper Functions
+const dbName = 'BsmlaDB';
+const storeName = 'mediaStore';
+
+function initDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName, 1);
+        request.onerror = (e) => reject("DB Error");
+        request.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(storeName)) {
+                db.createObjectStore(storeName);
+            }
+        };
+        request.onsuccess = (e) => resolve(e.target.result);
+    });
+}
+
+async function saveSongToDB(blob, name) {
+    try {
+        const db = await initDB();
+        const tx = db.transaction(storeName, 'readwrite');
+        const store = tx.objectStore(storeName);
+        store.put(blob, 'userSong');
+        store.put(name, 'userSongName');
+        return true;
+    } catch (e) {
+        console.error("Save failed:", e);
+        return false;
+    }
+}
+
+async function getSongFromDB() {
+    try {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(storeName, 'readonly');
+            const store = tx.objectStore(storeName);
+            const request = store.get('userSong');
+            const nameRequest = store.get('userSongName');
+
+            request.onsuccess = () => {
+                nameRequest.onsuccess = () => {
+                    resolve({
+                        blob: request.result,
+                        name: nameRequest.result
+                    });
+                };
+            };
+            request.onerror = () => reject();
+        });
+    } catch (e) {
+        return null;
+    }
+}
+
 // Load saved song on startup
-function loadSavedSong() {
-    const savedSong = localStorage.getItem('userSong');
-    const savedSongName = localStorage.getItem('userSongName');
-    if (savedSong) {
-        audio.src = savedSong;
-        if (savedSongName) {
-            musicTitle.textContent = savedSongName;
+async function loadSavedSong() {
+    const data = await getSongFromDB();
+    if (data && data.blob) {
+        const url = URL.createObjectURL(data.blob);
+        audio.src = url;
+        if (data.name) {
+            musicTitle.textContent = data.name;
         }
         musicPlayer.classList.add('has-song');
     }
@@ -702,32 +758,28 @@ function uploadSong() {
 }
 
 // Handle song upload
-function handleSongUpload(event) {
+async function handleSongUpload(event) {
     const file = event.target.files[0];
     if (file) {
-        // Check file size (limit to 50MB for localStorage)
-        if (file.size > 50 * 1024 * 1024) {
-            showToast('Song file is too large! Please use a file under 50MB.', 'error');
+        // Limit increased to 200MB since we use IndexedDB now
+        if (file.size > 200 * 1024 * 1024) {
+            showToast('File too large (>200MB). Please choose a smaller file.', 'error');
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            try {
-                const songData = e.target.result;
-                localStorage.setItem('userSong', songData);
-                localStorage.setItem('userSongName', file.name.replace(/\.[^/.]+$/, "")); // Remove extension
+        showToast('Saving song... please wait ⏳', 'info');
 
-                audio.src = songData;
-                musicTitle.textContent = file.name.replace(/\.[^/.]+$/, "");
-                musicPlayer.classList.add('has-song');
-                showToast('Song added! Click play to listen 🎵', 'success');
-            } catch (err) {
-                showToast('Unable to save song. Try a smaller file.', 'error');
-                console.error('Song save error:', err);
-            }
-        };
-        reader.readAsDataURL(file);
+        const success = await saveSongToDB(file, file.name.replace(/\.[^/.]+$/, ""));
+
+        if (success) {
+            const url = URL.createObjectURL(file);
+            audio.src = url;
+            musicTitle.textContent = file.name.replace(/\.[^/.]+$/, "");
+            musicPlayer.classList.add('has-song');
+            showToast('Song added successfully! 🎵', 'success');
+        } else {
+            showToast('Failed to save song. Please try again.', 'error');
+        }
     }
 }
 
