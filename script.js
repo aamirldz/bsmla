@@ -1,3 +1,99 @@
+// ========== CUSTOM TOAST NOTIFICATION SYSTEM ==========
+function showToast(message, type = 'info', duration = 3500) {
+    // Create container if it doesn't exist
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+
+    // Icon based on type
+    const icons = {
+        success: '✓',
+        error: '✕',
+        warning: '⚠',
+        info: '💡',
+        love: '💕'
+    };
+
+    toast.innerHTML = `
+        <span class="toast-icon">${icons[type] || icons.info}</span>
+        <span class="toast-message">${message}</span>
+        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+    `;
+
+    container.appendChild(toast);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+        toast.classList.add('toast-show');
+    });
+
+    // Auto remove
+    setTimeout(() => {
+        toast.classList.add('toast-hide');
+        setTimeout(() => toast.remove(), 400);
+    }, duration);
+
+    return toast;
+}
+
+// Custom confirmation dialog
+function showConfirmDialog(message, onConfirm, onCancel) {
+    // Remove any existing dialog
+    const existingDialog = document.getElementById('confirm-dialog-overlay');
+    if (existingDialog) existingDialog.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'confirm-dialog-overlay';
+    overlay.className = 'confirm-overlay';
+
+    overlay.innerHTML = `
+        <div class="confirm-dialog">
+            <div class="confirm-icon">💭</div>
+            <div class="confirm-message">${message}</div>
+            <div class="confirm-buttons">
+                <button class="confirm-btn confirm-cancel">Cancel</button>
+                <button class="confirm-btn confirm-ok">Confirm</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    // Animate in
+    requestAnimationFrame(() => {
+        overlay.classList.add('confirm-show');
+    });
+
+    // Button handlers
+    overlay.querySelector('.confirm-ok').addEventListener('click', () => {
+        overlay.classList.remove('confirm-show');
+        setTimeout(() => overlay.remove(), 300);
+        if (onConfirm) onConfirm();
+    });
+
+    overlay.querySelector('.confirm-cancel').addEventListener('click', () => {
+        overlay.classList.remove('confirm-show');
+        setTimeout(() => overlay.remove(), 300);
+        if (onCancel) onCancel();
+    });
+
+    // Click outside to cancel
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            overlay.classList.remove('confirm-show');
+            setTimeout(() => overlay.remove(), 300);
+            if (onCancel) onCancel();
+        }
+    });
+}
+
 // ========== THEME SWITCHER SYSTEM ==========
 function initThemeSwitcher() {
     const themeToggle = document.getElementById('theme-toggle');
@@ -18,6 +114,10 @@ function initThemeSwitcher() {
             // Animation feedback
             opt.style.transform = 'scale(1.5)';
             setTimeout(() => opt.style.transform = '', 300);
+
+            // Show toast for theme change
+            const themeNames = { moonlight: '🌙 Moonlight', sunset: '🌅 Sunset', cherry: '🌸 Cherry Blossom' };
+            showToast(`Theme changed to ${themeNames[theme]}`, 'success', 2000);
         });
     });
 
@@ -109,14 +209,16 @@ document.getElementById('hug-btn').addEventListener('click', function () {
     btn.disabled = true;
     btn.textContent = "Sending love... ❤️";
 
-    // 1. Move images towards center
+    // 1. Move images towards center (slower animation)
+    leftImage.style.transition = 'all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+    rightImage.style.transition = 'all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
     leftImage.style.left = '40%';
     leftImage.style.opacity = '0';
 
     rightImage.style.right = '40%';
     rightImage.style.opacity = '0';
 
-    // 2. Show center image (hug)
+    // 2. Show center image (hug) - after 1200ms
     setTimeout(() => {
         leftImage.classList.add('hidden');
         rightImage.classList.add('hidden');
@@ -124,9 +226,9 @@ document.getElementById('hug-btn').addEventListener('click', function () {
         centreImage.classList.remove('hidden');
         centreImage.style.opacity = '1';
         centreImage.style.transform = 'scale(1.2) rotate(10deg)'; // Little pop effect
-    }, 800);
+    }, 1200);
 
-    // 3. Reset everything
+    // 3. Reset everything - after 5000ms total
     setTimeout(() => {
         centreImage.style.opacity = '0';
         centreImage.style.transform = 'scale(1)';
@@ -145,9 +247,9 @@ document.getElementById('hug-btn').addEventListener('click', function () {
 
             btn.disabled = false;
             btn.textContent = "Send a Virtual Hug 🤗";
-        }, 100);
+        }, 150);
 
-    }, 3500);
+    }, 5000);
 });
 
 // Countdown Timer System
@@ -213,7 +315,7 @@ function saveCountdownDate() {
     const newDate = document.getElementById('new-countdown-date').value;
 
     if (!newDate) {
-        alert('Please select a valid date.');
+        showToast('Please select a valid date.', 'warning');
         return;
     }
 
@@ -222,6 +324,7 @@ function saveCountdownDate() {
 
     document.getElementById('edit-date-section').classList.add('hidden');
     startCountdown();
+    showToast('Countdown date saved! ✨', 'success', 2500);
 }
 
 // Image Upload Logic
@@ -238,7 +341,7 @@ function handleImageUpload(event, person) {
     if (file) {
         // Limit file size to 500KB to prevent localStorage quota errors
         if (file.size > 500 * 1024) {
-            alert("File is too large! Please select an image under 500KB.");
+            showToast('File is too large! Please select an image under 500KB.', 'error');
             return;
         }
 
@@ -248,8 +351,9 @@ function handleImageUpload(event, person) {
             try {
                 localStorage.setItem(`img_${person}`, imageData);
                 displayImage(person, imageData);
+                showToast('Photo updated! 📸', 'success', 2000);
             } catch (err) {
-                alert("Storage full! Unable to save image.");
+                showToast('Storage full! Unable to save image.', 'error');
                 console.error("LocalStorage error:", err);
             }
         };
@@ -398,7 +502,7 @@ function saveMilestone() {
     const date = document.getElementById('milestone-date-input').value;
 
     if (!title || !date) {
-        alert("Please provide at least a title and a date! 💕");
+        showToast('Please provide at least a title and a date! 💕', 'warning');
         return;
     }
 
@@ -417,15 +521,17 @@ function saveMilestone() {
     saveMilestones(milestones);
     toggleMilestoneForm();
     displayMilestones();
+    showToast(editingMilestoneIndex >= 0 ? 'Memory updated! 💕' : 'New memory added! 💖', 'love', 2500);
 }
 
 function deleteMilestone(index) {
-    if (confirm("Are you sure you want to delete this memory? 🥺")) {
+    showConfirmDialog("Are you sure you want to delete this memory? 🥺", () => {
         const milestones = getMilestones();
         milestones.splice(index, 1);
         saveMilestones(milestones);
         displayMilestones();
-    }
+        showToast('Memory deleted', 'info', 2000);
+    });
 }
 
 function displayMilestones() {
@@ -511,44 +617,122 @@ butterfly.addEventListener('click', () => {
 });
 
 
-// Side Window Interaction
+// Side Window Interaction - Both windows change together
+let windowsAnimating = false;
+
 function changeImage(side) {
-    const img = document.getElementById(`${side}-window`);
-    if (!img || img.classList.contains('animating')) return;
+    // Prevent multiple simultaneous animations
+    if (windowsAnimating) return;
 
-    img.classList.add('animating');
-    const originalSrc = `${side}-window.jpg`;
-    const kissSrc = `${side}-kiss.jpg`;
+    const leftImg = document.getElementById('left-window');
+    const rightImg = document.getElementById('right-window');
 
-    // Visual feedback for click
-    img.style.transform = 'scale(1.1)';
-    img.style.opacity = '0.7';
+    if (!leftImg || !rightImg) return;
 
+    windowsAnimating = true;
+
+    // Visual feedback for click - both images
+    leftImg.style.transform = 'scale(1.1)';
+    leftImg.style.opacity = '0.7';
+    rightImg.style.transform = 'scale(1.1)';
+    rightImg.style.opacity = '0.7';
+
+    // Change both to kiss images
     setTimeout(() => {
-        img.src = kissSrc;
-        img.style.opacity = '1';
-        img.style.filter = 'drop-shadow(0 0 20px rgba(255, 77, 109, 0.5))';
+        leftImg.src = 'left-kiss.jpg';
+        rightImg.src = 'right-kiss.jpg';
+
+        leftImg.style.opacity = '1';
+        rightImg.style.opacity = '1';
+        leftImg.style.filter = 'drop-shadow(0 0 20px rgba(255, 77, 109, 0.5))';
+        rightImg.style.filter = 'drop-shadow(0 0 20px rgba(255, 77, 109, 0.5))';
+        leftImg.style.transform = 'scale(1.05)';
+        rightImg.style.transform = 'scale(1.05)';
     }, 300);
 
+    // Reset both after 3 seconds
     setTimeout(() => {
-        img.style.opacity = '0.7';
-        img.style.transform = 'scale(1)';
+        leftImg.style.opacity = '0.7';
+        rightImg.style.opacity = '0.7';
+        leftImg.style.transform = 'scale(1)';
+        rightImg.style.transform = 'scale(1)';
 
         setTimeout(() => {
-            img.src = originalSrc;
-            img.style.opacity = '1';
-            img.style.filter = '';
-            img.classList.remove('animating');
+            leftImg.src = 'left-window.jpg';
+            rightImg.src = 'right-window.jpg';
+            leftImg.style.opacity = '1';
+            rightImg.style.opacity = '1';
+            leftImg.style.filter = '';
+            rightImg.style.filter = '';
+            windowsAnimating = false;
         }, 300);
     }, 3000);
 }
 
 
-// Music Player Logic
+// Music Player Logic with Song Upload
 const playBtn = document.getElementById('play-pause-btn');
 const audio = document.getElementById('bg-music');
 const musicStatus = document.querySelector('.music-status');
+const musicTitle = document.querySelector('.music-title');
 let isPlaying = false;
+
+// Load saved song on startup
+function loadSavedSong() {
+    const savedSong = localStorage.getItem('userSong');
+    const savedSongName = localStorage.getItem('userSongName');
+    if (savedSong) {
+        audio.src = savedSong;
+        if (savedSongName) {
+            musicTitle.textContent = savedSongName;
+        }
+    }
+}
+
+// Trigger song upload
+function uploadSong() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'audio/*';
+    input.onchange = (e) => handleSongUpload(e);
+    input.click();
+}
+
+// Handle song upload
+function handleSongUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        // Check file size (limit to 10MB for localStorage)
+        if (file.size > 10 * 1024 * 1024) {
+            showToast('Song file is too large! Please use a file under 10MB.', 'error');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            try {
+                const songData = e.target.result;
+                localStorage.setItem('userSong', songData);
+                localStorage.setItem('userSongName', file.name.replace(/\.[^/.]+$/, "")); // Remove extension
+
+                audio.src = songData;
+                musicTitle.textContent = file.name.replace(/\.[^/.]+$/, "");
+                showToast('Song added! Click play to listen 🎵', 'success');
+            } catch (err) {
+                showToast('Unable to save song. Try a smaller file.', 'error');
+                console.error('Song save error:', err);
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Add click handler to music title for uploading
+if (musicTitle) {
+    musicTitle.style.cursor = 'pointer';
+    musicTitle.title = 'Click to add your song';
+    musicTitle.addEventListener('click', uploadSong);
+}
 
 playBtn.addEventListener('click', () => {
     if (isPlaying) {
@@ -557,15 +741,21 @@ playBtn.addEventListener('click', () => {
         playBtn.classList.remove('playing');
         musicStatus.textContent = 'Paused';
     } else {
-        // Attempt to play - might fail if no source, but UI will update
+        // Check if there's a song source
+        if (!audio.src || audio.src === window.location.href) {
+            showToast('Click on "Our Song" to add your music! 🎵', 'info');
+            return;
+        }
+
         const playPromise = audio.play();
 
         if (playPromise !== undefined) {
             playPromise.then(_ => {
-                // Play started
+                musicStatus.textContent = 'Playing... 🎶';
             }).catch(error => {
-                console.log("Audio play failed (expected if source missing):", error);
-                // We'll still update UI to simulate it for the user
+                console.log("Audio play failed:", error);
+                showToast('Unable to play. Try adding a song first.', 'warning');
+                return;
             });
         }
 
@@ -576,12 +766,48 @@ playBtn.addEventListener('click', () => {
     isPlaying = !isPlaying;
 });
 
-// Reset Functionality
+// Load saved song on page load
+loadSavedSong();
+
+// Reset Functionality - Complete Reset
 document.getElementById('reset-btn').addEventListener('click', () => {
-    if (confirm("Are you sure you want to clear all customization?")) {
+    showConfirmDialog("Clear all customization?<br><small>• Photos • Milestones • Countdown • Theme</small>", () => {
+        // Clear all localStorage data
         localStorage.clear();
-        location.reload();
-    }
+
+        // Reset images to default before reload
+        const imgAamir = document.getElementById('img-aamir');
+        const imgPlace = document.getElementById('img-place');
+        const imgBsmla = document.getElementById('img-bsmla');
+        const leftWindow = document.getElementById('left-window');
+        const rightWindow = document.getElementById('right-window');
+        const leftImage = document.getElementById('left-image');
+        const rightImage = document.getElementById('right-image');
+
+        if (imgAamir) imgAamir.src = 'left-image.png';
+        if (imgPlace) imgPlace.src = 'default-place.jpg';
+        if (imgBsmla) imgBsmla.src = 'right-image.png';
+        if (leftWindow) leftWindow.src = 'left-window.jpg';
+        if (rightWindow) rightWindow.src = 'right-window.jpg';
+        if (leftImage) leftImage.src = 'left-image.png';
+        if (rightImage) rightImage.src = 'right-image.png';
+
+        // Reset milestones display
+        const timeline = document.getElementById('timeline');
+        if (timeline) {
+            timeline.innerHTML = '';
+        }
+
+        // Reset theme
+        document.body.className = 'theme-moonlight';
+
+        showToast('Experience reset! Reloading...', 'success', 1500);
+
+        // Small delay to show reset visually, then reload
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    });
 });
 
 
