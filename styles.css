@@ -2108,10 +2108,11 @@ footer {
 
 .windows-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 60px;
-    flex-wrap: wrap;
+    width: 100%;
+    padding: 0 40px;
+    box-sizing: border-box;
 }
 
 .side-window {
@@ -2120,18 +2121,14 @@ footer {
     align-items: center;
     gap: 15px;
     position: relative;
-    /* Reset fixed */
     top: auto;
     transform: none;
     z-index: 1;
 }
 
-/* Ensure labels are visible */
+/* Ensure labels are hidden */
 .window-label {
-    display: block;
-    font-size: 1rem;
-    color: var(--text-main);
-    font-weight: 500;
+    display: none;
 }
 
 .window-img {
