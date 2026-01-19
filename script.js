@@ -378,61 +378,7 @@ function loadSavedImages() {
     });
 }
 
-// ========== VIRTUAL KISS SYSTEM ==========
-function sendKiss() {
-    const btn = document.getElementById('kiss-btn');
-    const explosion = document.getElementById('kiss-explosion');
-    const message = document.getElementById('kiss-message');
 
-    if (!btn || !explosion || !message) return;
-
-    const messages = [
-        "A kiss sent with all my love! 💋",
-        "MWAH! 😘💕",
-        "A little kiss across the miles! 💖",
-        "Thinking of you... 💗",
-        "This one is just for you! 💋✨"
-    ];
-
-    // Button feedback
-    btn.style.transform = 'scale(1.3) rotate(15deg)';
-    setTimeout(() => btn.style.transform = '', 300);
-
-    // Heart explosion
-    const particles = ['❤️', '💕', '💖', '✨', '💋', '🌸'];
-    for (let i = 0; i < 20; i++) {
-        const p = document.createElement('div');
-        p.className = 'kiss-particle';
-        p.textContent = particles[Math.floor(Math.random() * particles.length)];
-
-        // Random trajectory
-        const angle = Math.random() * Math.PI * 2;
-        const distance = 100 + Math.random() * 100;
-        const duration = 0.6 + Math.random() * 0.6;
-
-        const tx = Math.cos(angle) * distance;
-        const ty = Math.sin(angle) * distance;
-
-        p.style.transition = `all ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
-        explosion.appendChild(p);
-
-        // Animate
-        requestAnimationFrame(() => {
-            p.style.transform = `translate(${tx}px, ${ty}px) scale(${0.5 + Math.random()})`;
-            p.style.opacity = '0';
-        });
-
-        setTimeout(() => p.remove(), duration * 1000);
-    }
-
-    // Show message
-    message.textContent = messages[Math.floor(Math.random() * messages.length)];
-    message.classList.add('visible');
-
-    setTimeout(() => {
-        message.classList.remove('visible');
-    }, 2500);
-}
 
 // ========== MILESTONES TIMELINE SYSTEM ==========
 let editingMilestoneIndex = -1;
@@ -617,58 +563,6 @@ butterfly.addEventListener('click', () => {
     }, 400);
 });
 
-
-// Side Window Interaction - Both windows change together
-let windowsAnimating = false;
-
-function changeImage(side) {
-    // Prevent multiple simultaneous animations
-    if (windowsAnimating) return;
-
-    const leftImg = document.getElementById('left-window');
-    const rightImg = document.getElementById('right-window');
-
-    if (!leftImg || !rightImg) return;
-
-    windowsAnimating = true;
-
-    // Visual feedback for click - both images
-    leftImg.style.transform = 'scale(1.1)';
-    leftImg.style.opacity = '0.7';
-    rightImg.style.transform = 'scale(1.1)';
-    rightImg.style.opacity = '0.7';
-
-    // Change both to kiss images
-    setTimeout(() => {
-        leftImg.src = 'left-kiss.jpg';
-        rightImg.src = 'right-kiss.jpg';
-
-        leftImg.style.opacity = '1';
-        rightImg.style.opacity = '1';
-        leftImg.style.filter = 'drop-shadow(0 0 20px rgba(255, 77, 109, 0.5))';
-        rightImg.style.filter = 'drop-shadow(0 0 20px rgba(255, 77, 109, 0.5))';
-        leftImg.style.transform = 'scale(1.05)';
-        rightImg.style.transform = 'scale(1.05)';
-    }, 300);
-
-    // Reset both after 3 seconds
-    setTimeout(() => {
-        leftImg.style.opacity = '0.7';
-        rightImg.style.opacity = '0.7';
-        leftImg.style.transform = 'scale(1)';
-        rightImg.style.transform = 'scale(1)';
-
-        setTimeout(() => {
-            leftImg.src = 'left-window.jpg';
-            rightImg.src = 'right-window.jpg';
-            leftImg.style.opacity = '1';
-            rightImg.style.opacity = '1';
-            leftImg.style.filter = '';
-            rightImg.style.filter = '';
-            windowsAnimating = false;
-        }, 300);
-    }, 3000);
-}
 
 
 // Music Player Logic with Song Upload

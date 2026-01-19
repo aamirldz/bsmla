@@ -151,13 +151,6 @@
                 </div>
             </section>
 
-            <!-- Virtual Kiss Section -->
-            <section class="kiss-section">
-                <h3 class="section-title-mini">Send a Virtual Kiss</h3>
-                <button class="kiss-btn" id="kiss-btn" onclick="sendKiss()" aria-label="Send a kiss">😘</button>
-                <div class="kiss-explosion" id="kiss-explosion"></div>
-                <p id="kiss-message" class="kiss-message"></p>
-            </section>
 
             <!-- Interactive Text Section -->
             <section class="love-notes">
@@ -179,17 +172,29 @@
                 <button id="hug-btn" class="btn-action pulse">Send a Virtual Hug 🤗</button>
             </section>
 
-        </div> <!-- End Glass Panel -->
+            <!-- Music Player Section (inside glass panel, scrolls with page) -->
+            <section class="music-section">
+                <h3 class="section-title-mini">🎵 Our Song</h3>
+                <div class="music-player" id="music-player">
+                    <div class="music-visualizer">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    <div class="music-info">
+                        <span class="music-title" title="Click to add your song">Click to add music</span>
+                        <span class="music-status">Paused</span>
+                    </div>
+                    <button id="play-pause-btn" class="play-btn" title="Play/Pause">▶</button>
+                    <audio id="bg-music" loop>
+                        <source src="our-song.mp3" type="audio/mpeg">
+                    </audio>
+                </div>
+            </section>
 
-        <!-- Side Decorations (Windows) -->
-        <div class="side-window left-window-container">
-            <img src="left-window.jpg" alt="Left View" class="window-img" id="left-window"
-                onclick="changeImage('left')">
-        </div>
-        <div class="side-window right-window-container">
-            <img src="right-window.jpg" alt="Right View" class="window-img" id="right-window"
-                onclick="changeImage('right')">
-        </div>
+        </div> <!-- End Glass Panel -->
 
         <div class="controls">
             <button id="reset-btn" class="btn-text" title="Clear all local data">Reset Experience</button>
@@ -198,27 +203,6 @@
         <footer>
             <p>Every moment with you is a treasure. 💖</p>
         </footer>
-
-        <!-- Music Player Widget -->
-        <div class="music-player" id="music-player">
-            <div class="music-visualizer">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-            <div class="music-info">
-                <span class="music-title" title="Click to add your song">🎵 Our Song</span>
-                <span class="music-hint">Click to add music</span>
-                <span class="music-status">Paused</span>
-            </div>
-            <button id="play-pause-btn" class="play-btn" title="Play/Pause">▶</button>
-            <audio id="bg-music" loop>
-                <!-- User should add their song here -->
-                <source src="our-song.mp3" type="audio/mpeg">
-            </audio>
-        </div>
     </main>
 
     <script src="script.js"></script>

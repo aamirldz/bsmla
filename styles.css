@@ -1851,27 +1851,35 @@ footer {
     color: var(--text-main);
 }
 
+/* ========== MUSIC SECTION ========== */
+.music-section {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.music-section .section-title-mini {
+    margin-bottom: 20px;
+}
+
 /* ========== ENHANCED MUSIC PLAYER ========== */
 .music-player {
-    position: fixed;
-    bottom: 25px;
-    left: 25px;
+    /* Non-fixed - scrolls with page */
+    position: relative;
+    margin: 0 auto;
     background: linear-gradient(145deg, rgba(25, 20, 45, 0.95) 0%, rgba(35, 25, 55, 0.98) 100%);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    padding: 16px 24px;
-    border-radius: 20px;
-    display: flex;
+    padding: 20px 30px;
+    border-radius: 25px;
+    display: inline-flex;
     align-items: center;
-    gap: 18px;
+    gap: 20px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow:
         0 10px 40px rgba(0, 0, 0, 0.4),
         0 0 20px rgba(255, 77, 109, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    z-index: 1000;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    min-width: 280px;
 }
 
 .music-player:hover {
