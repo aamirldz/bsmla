@@ -564,59 +564,7 @@ butterfly.addEventListener('click', () => {
 });
 
 
-// ========== SIDE WINDOW KISS INTERACTION ==========
-let windowsAnimating = false;
 
-function changeImage(side) {
-    // Prevent multiple simultaneous animations
-    if (windowsAnimating) return;
-
-    const leftImg = document.getElementById('left-window');
-    const rightImg = document.getElementById('right-window');
-
-    if (!leftImg || !rightImg) return;
-
-    windowsAnimating = true;
-
-    // Visual feedback for click - both windows glow
-    leftImg.style.transform = 'scale(1.1)';
-    leftImg.style.opacity = '0.7';
-    rightImg.style.transform = 'scale(1.1)';
-    rightImg.style.opacity = '0.7';
-
-    // Change both to kiss images
-    setTimeout(() => {
-        leftImg.src = 'left-kiss.jpg';
-        rightImg.src = 'right-kiss.jpg';
-
-        leftImg.style.opacity = '1';
-        rightImg.style.opacity = '1';
-        leftImg.style.filter = 'drop-shadow(0 0 25px rgba(255, 77, 109, 0.6))';
-        rightImg.style.filter = 'drop-shadow(0 0 25px rgba(255, 77, 109, 0.6))';
-        leftImg.style.transform = 'scale(1.05)';
-        rightImg.style.transform = 'scale(1.05)';
-
-        showToast('💕 Love sent across the distance! 💕', 'love');
-    }, 300);
-
-    // Reset both after 3 seconds
-    setTimeout(() => {
-        leftImg.style.opacity = '0.7';
-        rightImg.style.opacity = '0.7';
-        leftImg.style.transform = 'scale(1)';
-        rightImg.style.transform = 'scale(1)';
-
-        setTimeout(() => {
-            leftImg.src = 'left-window.jpg';
-            rightImg.src = 'right-window.jpg';
-            leftImg.style.opacity = '1';
-            rightImg.style.opacity = '1';
-            leftImg.style.filter = '';
-            rightImg.style.filter = '';
-            windowsAnimating = false;
-        }, 300);
-    }, 3500);
-}
 
 
 // Music Player Logic with Song Upload

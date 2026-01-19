@@ -707,75 +707,7 @@ button {
     margin-bottom: 20px;
 }
 
-/* ========== VIRTUAL KISS ========== */
-.kiss-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    position: relative;
-    padding: 20px;
-}
 
-.kiss-btn {
-    font-size: 4rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    animation: kissFloat 2s ease-in-out infinite;
-    z-index: 5;
-}
-
-.kiss-btn:hover {
-    transform: scale(1.2);
-}
-
-.kiss-btn:active {
-    transform: scale(0.9);
-}
-
-@keyframes kissFloat {
-
-    0%,
-    100% {
-        transform: translateY(0) rotate(-5deg);
-    }
-
-    50% {
-        transform: translateY(-10px) rotate(5deg);
-    }
-}
-
-.kiss-explosion {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    pointer-events: none;
-    z-index: 4;
-}
-
-.kiss-particle {
-    position: absolute;
-    font-size: 1.5rem;
-    pointer-events: none;
-    user-select: none;
-}
-
-.kiss-message {
-    font-size: 1rem;
-    color: var(--text-muted);
-    min-height: 1.5rem;
-    font-style: italic;
-    transition: opacity 0.5s, transform 0.5s;
-    opacity: 0;
-    transform: translateY(10px);
-}
-
-.kiss-message.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
 
 /* ========== MILESTONES SECTION ========== */
 .milestones-section {
@@ -1544,122 +1476,7 @@ footer {
     font-weight: 500;
 }
 
-/* ========== ENHANCED VIRTUAL KISS SECTION ========== */
-.kiss-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    position: relative;
-    padding: 40px 20px;
-    background: linear-gradient(180deg, transparent 0%, rgba(255, 77, 109, 0.03) 50%, transparent 100%);
-    border-radius: 30px;
-}
 
-.kiss-section::before {
-    content: '💋';
-    position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2rem;
-    opacity: 0.5;
-}
-
-.kiss-btn {
-    font-size: 5rem;
-    background: radial-gradient(circle, rgba(255, 77, 109, 0.2) 0%, transparent 70%);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    animation: kissFloat 2.5s ease-in-out infinite;
-    z-index: 5;
-    padding: 20px;
-    border-radius: 50%;
-    position: relative;
-}
-
-.kiss-btn::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 77, 109, 0.3) 0%, transparent 60%);
-    animation: kissGlow 2s ease-in-out infinite;
-    z-index: -1;
-}
-
-@keyframes kissGlow {
-
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 0.5;
-    }
-
-    50% {
-        transform: scale(1.2);
-        opacity: 0.8;
-    }
-}
-
-.kiss-btn:hover {
-    transform: scale(1.15) rotate(-5deg);
-}
-
-.kiss-btn:active {
-    transform: scale(0.95) rotate(5deg);
-}
-
-@keyframes kissFloat {
-
-    0%,
-    100% {
-        transform: translateY(0) rotate(-3deg);
-    }
-
-    50% {
-        transform: translateY(-12px) rotate(3deg);
-    }
-}
-
-.kiss-explosion {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    pointer-events: none;
-    z-index: 4;
-}
-
-.kiss-particle {
-    position: absolute;
-    font-size: 1.8rem;
-    pointer-events: none;
-    user-select: none;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-.kiss-message {
-    font-size: 1.1rem;
-    color: var(--text-main);
-    min-height: 1.5rem;
-    font-family: 'Dancing Script', cursive;
-    font-weight: 600;
-    transition: all 0.5s ease;
-    opacity: 0;
-    transform: translateY(10px);
-    background: linear-gradient(90deg, var(--primary-color), #fff, var(--primary-color));
-    background-size: 200% auto;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.kiss-message.visible {
-    opacity: 1;
-    transform: translateY(0);
-    animation: shimmerText 2s linear infinite;
-}
 
 /* ========== ENHANCED VIRTUAL HUG SECTION ========== */
 .virtual-hug-section {
@@ -1851,35 +1668,27 @@ footer {
     color: var(--text-main);
 }
 
-/* ========== MUSIC SECTION ========== */
-.music-section {
-    text-align: center;
-    padding: 20px 0;
-}
-
-.music-section .section-title-mini {
-    margin-bottom: 20px;
-}
-
 /* ========== ENHANCED MUSIC PLAYER ========== */
 .music-player {
-    /* Non-fixed - scrolls with page */
-    position: relative;
-    margin: 0 auto;
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
     background: linear-gradient(145deg, rgba(25, 20, 45, 0.95) 0%, rgba(35, 25, 55, 0.98) 100%);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    padding: 20px 30px;
-    border-radius: 25px;
-    display: inline-flex;
+    padding: 16px 24px;
+    border-radius: 20px;
+    display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 18px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow:
         0 10px 40px rgba(0, 0, 0, 0.4),
         0 0 20px rgba(255, 77, 109, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    z-index: 1000;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    min-width: 280px;
 }
 
 .music-player:hover {
@@ -2090,77 +1899,4 @@ footer {
     font-size: 1.2rem;
     padding-bottom: 20px;
     text-align: center;
-}
-
-/* ========== WINDOWS SECTION (SCROLLABLE) ========== */
-.windows-section {
-    text-align: center;
-    margin-top: 60px;
-    padding: 40px 20px;
-}
-
-.windows-hint {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    margin-top: 10px;
-    margin-bottom: 30px;
-}
-
-.windows-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0 40px;
-    box-sizing: border-box;
-}
-
-.side-window {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    position: relative;
-    top: auto;
-    transform: none;
-    z-index: 1;
-}
-
-/* Ensure labels are hidden */
-.window-label {
-    display: none;
-}
-
-.window-img {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 20px;
-    border: 4px solid rgba(255, 255, 255, 0.2);
-    box-shadow:
-        0 10px 40px rgba(0, 0, 0, 0.3),
-        0 0 20px rgba(255, 77, 109, 0.1);
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    background: transparent;
-    backdrop-filter: none;
-}
-
-.window-img:hover {
-    transform: scale(1.08) rotate(2deg);
-    border-color: var(--primary-color);
-    box-shadow:
-        0 15px 50px rgba(0, 0, 0, 0.4),
-        0 0 30px rgba(255, 77, 109, 0.3);
-}
-
-@media (max-width: 768px) {
-    .windows-container {
-        gap: 30px;
-    }
-
-    .window-img {
-        width: 140px;
-        height: 140px;
-    }
 }
